@@ -178,6 +178,8 @@ SIMPLE_JWT = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+AUTH_USER_MODEL = 'api.User'
+
 # Custom Admin Settings
 JAZZMIN_SETTINGS = {
     "site_title": "Desphixs",
