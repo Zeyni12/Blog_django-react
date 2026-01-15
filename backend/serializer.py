@@ -34,4 +34,79 @@ class RegisterSerializer(serializers.ModelSerializer):
             email = validated_data['email'],
         ) 
         
-        email_
+        email_username, mobile = user.email.split('@')
+        user.username = email_username
+        
+        user.set_password(validate_password['password'])
+        user.save()
+        
+        return user
+    
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = api_models.User
+        fields = '__all__'
+            
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = api_models.Profile
+        fields = '__all__'        
+            
+class CategorySerializer(serializers.ModelSerializer):
+    def get_post_count(self, category):
+        return category.posts.count()
+        
+    class Meta:
+        model = api_models.Category
+        fields = ['id','title','image','slug','post_count']
+            
+class PostSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = api_models.Post
+        fields = '__all__'   
+        
+    def __init__(self, args*, **kwargs):
+        super(PostSerializer, self).__init__()
+        request = self.context.get('request')
+        if request and request.method == 'POST':
+            self.Meta.depth = 0
+        else:
+            self.Meta.depth = 1
+                        
+                    
+
+class BookmarkSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = api_models.Bookmark
+        fields = '__all__'   
+        
+    def __init__(self, args*, **kwargs):
+        super(BookmarkSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get('request')
+        if request and request.method == 'POST':
+            self.Meta.depth = 0
+        else:
+            self.Meta.depth = 1     
+            
+class NotificationSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = api_models.Notification
+        fields = '__all__'   
+        
+    def __init__(self, args*, **kwargs):
+        super(NotificationSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get('request')
+        if request and request.method == 'POST':
+            self.Meta.depth = 0
+        else:
+            self.Meta.depth = 1 
+            
+class AuthorSerializer(serializers.Serializer):
+    views = serializers.IntegerField(default=0)
+    posts = serializers.IntegerField(default=0)
+    likes = serializers.IntegerField(default=0)
+    bookmarks = serializers.IntegerField(default=0)                                 
+        
