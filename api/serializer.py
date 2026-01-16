@@ -1,10 +1,12 @@
 from django.contrib.auth.password_validation import validate_password
-from rest_framework_simplejwt.serializers import TokenObtainPariSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
+
+
 
 from api import models as api_models
 
-class MyTokenObtainPairSerializer(TokenObtainPariSerializer):
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
@@ -15,8 +17,8 @@ class MyTokenObtainPairSerializer(TokenObtainPariSerializer):
         return token
     
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.charField(write_only=True, required=True, validators=[validate_password])
-    password2 = serializers.charField(write_only=True, required=True)
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
     
     class Meta:
         models = api_models.User
@@ -66,7 +68,7 @@ class PostSerializer(serializers.ModelSerializer):
         model = api_models.Post
         fields = '__all__'   
         
-    def __init__(self, args*, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(PostSerializer, self).__init__()
         request = self.context.get('request')
         if request and request.method == 'POST':
@@ -82,7 +84,7 @@ class BookmarkSerializer(serializers.ModelSerializer):
         model = api_models.Bookmark
         fields = '__all__'   
         
-    def __init__(self, args*, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(BookmarkSerializer, self).__init__(*args, **kwargs)
         request = self.context.get('request')
         if request and request.method == 'POST':
@@ -96,7 +98,7 @@ class NotificationSerializer(serializers.ModelSerializer):
         model = api_models.Notification
         fields = '__all__'   
         
-    def __init__(self, args*, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(NotificationSerializer, self).__init__(*args, **kwargs)
         request = self.context.get('request')
         if request and request.method == 'POST':
